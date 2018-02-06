@@ -134,7 +134,7 @@ apt-get remove -y \
   cmake \
   yasm && \
 apt-get -y autoremove && \
-apt-get clean && \
+apt-get clean
 
 # Run ffmpeg when the container launches
 CMD ["/app/ffmpeg"]
