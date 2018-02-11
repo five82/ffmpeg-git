@@ -39,8 +39,7 @@ mkdir -p /input /output /ffmpeg/ffmpeg_sources /ffmpeg/bin && \
 # Compile and install ffmpeg and ffprobe
 # Download source
 cd /ffmpeg/ffmpeg_sources && \
-curl -O http://www.nasm.us/pub/nasm/releasebuilds/2.13.01/nasm-2.13.01.tar.xz && \
-tar -xf nasm-2.13.01.tar.xz && \
+git clone -b "nasm-2.13.03" https://github.com/cyrillos/nasm.git
 git clone https://github.com/xiph/opus.git && \
 git clone --depth=1 git://git.videolan.org/x264 && \
 hg clone https://bitbucket.org/multicoreware/x265 && \
@@ -48,7 +47,7 @@ git clone --depth=1 https://github.com/FFmpeg/FFmpeg.git ffmpeg && \
 cd ffmpeg && \
 curl -O https://trac.ffmpeg.org/raw-attachment/ticket/5718/0001-libavcodec-libopusenc.c-patch-channel_layouts-back-i.patch && \
 # Compile nasm
-cd /ffmpeg/ffmpeg_sources/nasm-2.13.01 && \
+cd /ffmpeg/ffmpeg_sources/nasm && \
 ./autogen.sh && \
 PATH="/ffmpeg/bin:$PATH" ./configure \
 --prefix="/ffmpeg/ffmpeg_build" \
