@@ -39,7 +39,7 @@ mkdir -p /input /output /ffmpeg/ffmpeg_sources /ffmpeg/bin && \
 # Compile and install ffmpeg and ffprobe
 # Download source
 cd /ffmpeg/ffmpeg_sources && \
-git clone -b "nasm-2.13.03" https://github.com/cyrillos/nasm.git && \
+git clone -b "nasm-2.13.01" https://github.com/cyrillos/nasm.git && \
 git clone https://github.com/xiph/opus.git && \
 git clone --depth=1 git://git.videolan.org/x264 && \
 hg clone https://bitbucket.org/multicoreware/x265 && \
