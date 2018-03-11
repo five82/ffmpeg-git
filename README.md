@@ -1,3 +1,3 @@
 # ffmpeg
 
-This project is no longer being maintained.
+This repository is no longer being maintained.
