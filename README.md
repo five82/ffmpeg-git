@@ -12,4 +12,5 @@ For example:
     --name ffmpeg \
     -v <path/to/input/dir>:/input \
     -v <path/to/output/dir>:/output \
-    five82/ffmpeg /app/ffmpeg -i /input/input.mkv -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 384k /output/output.mkv
+    five82/ffmpeg \
+    /app/ffmpeg -i /input/input.mkv -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 384k /output/output.mkv
