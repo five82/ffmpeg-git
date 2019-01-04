@@ -6,8 +6,10 @@ FFmpeg container compiled with the following configuration:
 
 This is used as a base image for five82\batchtranscode but can be run as a standalone container.
 
+For example:
+
     docker run \
     --name ffmpeg \
     -v <path/to/input/dir>:/input \
     -v <path/to/output/dir>:/output \
-    five82/ffmpeg *options*
+    five82/ffmpeg /app/ffmpeg -i /input/input.mkv -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 384k /output/output.mkv
