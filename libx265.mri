@@ -1,6 +1,5 @@
 create libx265.a
 addlib libx265_main.a
 addlib libx265_main10.a
-addlib libx265_main12.a
 save
 end

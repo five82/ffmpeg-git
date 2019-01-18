@@ -4,7 +4,7 @@ FFmpeg container compiled from git master HEAD with the following configuration:
 
 ```--pkg-config-flags=--static --extra-libs='-lpthread -lm' --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-libopus --enable-libx264 --enable-libx265```
 
-This is intended as a base image for five82\batchtranscode but can be run as a standalone container.
+This is intended as a base image for five82/batchtranscode but can be run as a standalone container.
 
 For example:
 

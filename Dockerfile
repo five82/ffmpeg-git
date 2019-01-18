@@ -85,19 +85,9 @@ make install && \
 # Compile x265
 #-------------
 cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
-mkdir -p 8bit 10bit 12bit && \
-# 12 bit
-cd 12bit && \
-cmake -G "Unix Makefiles" \
-../../../source \
--DHIGH_BIT_DEPTH=ON \
--DEXPORT_C_API=OFF \
--DENABLE_SHARED=OFF \
--DENABLE_CLI=OFF \
--DMAIN12=ON && \
-make ${MAKEFLAGS} && \
+mkdir -p 8bit 10bit && \
 # 10 bit
-cd ../10bit && \
+cd 10bit && \
 cmake -G "Unix Makefiles" \
 ../../../source \
 -DHIGH_BIT_DEPTH=ON \
@@ -108,13 +98,11 @@ make ${MAKEFLAGS} && \
 # 8 bit
 cd ../8bit && \
 ln -sf ../10bit/libx265.a libx265_main10.a && \
-ln -sf ../12bit/libx265.a libx265_main12.a && \
 cmake -G "Unix Makefiles" \
 ../../../source \
--DEXTRA_LIB="x265_main10.a;x265_main12.a" \
+-DEXTRA_LIB="x265_main10.a" \
 -DEXTRA_LINK_FLAGS=-L. \
--DLINKED_10BIT=ON \
--DLINKED_12BIT=ON && \
+-DLINKED_10BIT=ON && \
 make ${MAKEFLAGS} && \
 mv libx265.a libx265_main.a && \
 ar -M </app/libx265.mri && \
