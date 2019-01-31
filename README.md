@@ -1,5 +1,7 @@
 # ffmpeg-git
 
+Available on Docker Hub at https://cloud.docker.com/repository/docker/five82/ffmpeg-git
+
 FFmpeg container compiled from git master HEAD with the following configuration:
 
 ```--pkg-config-flags=--static --extra-libs='-lpthread -lm' --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-libopus --enable-libx264 --enable-libx265```
