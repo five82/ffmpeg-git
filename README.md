@@ -1,6 +1,6 @@
 # ffmpeg-git
 
-Available on Docker Hub at https://cloud.docker.com/repository/docker/five82/ffmpeg-git
+Available on Docker Hub at https://hub.docker.com/r/ffmpeg-git/
 
 ```docker pull five82/ffmpeg-git```
 
