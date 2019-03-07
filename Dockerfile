@@ -57,11 +57,20 @@ mkdir -p /input /output /ffmpeg/ffmpeg_sources && \
 # Download source
 #----------------
 cd /ffmpeg/ffmpeg_sources && \
+git clone https://github.com/sekrit-twc/zimg.git && \
 git clone --depth 1 https://github.com/xiph/opus.git && \
 git clone --depth 1 https://git.videolan.org/git/x264 && \
 git clone https://github.com/videolan/x265.git && \
 curl -O https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
 tar xjf ffmpeg-snapshot.tar.bz2 && \
+#-------------------
+# Compile z.lib/zimg
+#-------------------
+cd /ffmpeg/ffmpeg_sources/zimg && \
+./autogen.sh && \
+./configure && \
+make ${MAKEFLAGS} && \
+make install && \
 #----------------
 # Compile libopus
 #----------------
@@ -120,6 +129,7 @@ cd /ffmpeg/ffmpeg_sources/ffmpeg && \
 --enable-ffprobe \
 --enable-gpl \
 --enable-libfreetype \
+--enable-libzimg \
 --enable-libopus \
 --enable-libx264 \
 --enable-libx265 && \
