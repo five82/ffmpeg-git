@@ -58,6 +58,7 @@ mkdir -p /input /output /ffmpeg/ffmpeg_sources && \
 #----------------
 cd /ffmpeg/ffmpeg_sources && \
 git clone https://github.com/sekrit-twc/zimg.git && \
+git clone https://github.com/Netflix/vmaf.git && \
 git clone --depth 1 https://github.com/xiph/opus.git && \
 git clone --depth 1 https://git.videolan.org/git/x264 && \
 git clone https://github.com/videolan/x265.git && \
@@ -70,6 +71,15 @@ cd /ffmpeg/ffmpeg_sources/zimg && \
 ./autogen.sh && \
 ./configure && \
 make ${MAKEFLAGS} && \
+make install && \
+#----------------
+# Compile libvmaf
+#----------------
+cd /ffmpeg/ffmpeg_sources/vmaf/ptools && \
+make ${MAKEFLAGS} && \
+cd ../wrapper && \
+make ${MAKEFLAGS} && \
+cd .. && \
 make install && \
 #----------------
 # Compile libopus
@@ -129,6 +139,8 @@ cd /ffmpeg/ffmpeg_sources/ffmpeg && \
 --enable-ffprobe \
 --enable-gpl \
 --enable-libfreetype \
+--enable-libvmaf \
+--enable-version3 \
 --enable-libzimg \
 --enable-libopus \
 --enable-libx264 \
