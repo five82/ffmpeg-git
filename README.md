@@ -1,16 +1,16 @@
-# ffmpeg-git
+# ffmpeg-vmaf
 
-Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-git/
+Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-vmaf/
 
-```docker pull five82/ffmpeg-git```
+```docker pull five82/ffmpeg-vmaf```
 
 FFmpeg container compiled from git master HEAD with the following configuration:
 
 ```--pkg-config-flags=--static --extra-libs='-lpthread -lm' --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-libvmaf --enable-version3 --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265```
 
-This is intended as a base image for five82/batchtranscode but can be run as a standalone container.
+Forked from five82/ffmpeg-git. Added libvmaf support for testing purposes.
 
-For example:
+Run ffmpeg commands using the example below:
 
     docker run \
     --name ffmpeg-git \
