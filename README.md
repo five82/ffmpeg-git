@@ -6,7 +6,7 @@ Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-git/
 
 FFmpeg container compiled from git master HEAD with the following configuration:
 
-```--pkg-config-flags=--static --extra-libs='-lpthread -lm' --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265```
+```--pkg-config-flags=--static --extra-libs='-lpthread -lm' --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-libvmaf --enable-version3 --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265```
 
 This is intended as a base image for five82/batchtranscode but can be run as a standalone container.
 
