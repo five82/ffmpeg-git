@@ -58,7 +58,7 @@ mkdir -p /input /output /ffmpeg/ffmpeg_sources && \
 #----------------
 cd /ffmpeg/ffmpeg_sources && \
 git clone https://github.com/sekrit-twc/zimg.git && \
-git clone https://github.com/Netflix/vmaf.git && \
+git clone --branch v1.3.15 https://github.com/Netflix/vmaf.git && \
 git clone --depth 1 https://github.com/xiph/opus.git && \
 git clone --depth 1 https://git.videolan.org/git/x264 && \
 git clone https://github.com/videolan/x265.git && \
