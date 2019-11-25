@@ -8,7 +8,7 @@ FFmpeg container compiled from git master HEAD with the following configuration:
 
 ```--pkg-config-flags=--static --extra-cflags='-I/usr/local/include -static' --extra-ldflags='-L/usr/local/lib -static' --extra-libs='-lpthread -lm' --disable-shared --enable-static --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-libvmaf --enable-version3 --enable-libzimg --enable-libopus --enable-libsvthevc --enable-libx264 --enable-libx265```
 
-Forked from five82/ffmpeg-git. Added libvmaf support for testing purposes.
+Forked from five82/ffmpeg-git. ffmpeg and ffprobe binaries are included.
 
 Run ffmpeg commands using the example below:
 
