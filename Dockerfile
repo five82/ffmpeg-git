@@ -1,5 +1,5 @@
-# Use Alpine as a base image
-FROM alpine:latest
+# Use Debian as a base image
+FROM debian:stable-slim AS build
 
 # Set the working directory to /app
 WORKDIR /app
@@ -11,44 +11,34 @@ ADD . /app
 # Update and install dependencies
 #--------------------------------
 RUN \
-export MAKEFLAGS="-j4" && \
-apk --no-cache update && \
-apk --no-cache upgrade && \
+apt-get update && \
 # Add build packages
-apk add --no-cache --update \
+apt-get install -y \
+--no-install-recommends \
   autoconf \
   automake \
-  binutils \
-  bzip2-dev \
+  build-essential \
+  ca-certificates \
   cmake \
-  file \
-  fortify-headers \
-  g++ \
-  gcc \
-  gmp \
-  isl \
-  libatomic \
-  libc-dev \
-  libgomp \
-  libmagic \
+  libasound2 \
+  libass-dev \
+  libfreetype6-dev \
+  libnuma-dev \
+  libtool-bin \
+  libsdl2-dev \
   libtool \
-  make \
-  mpc1 \
-  mpfr3 \
-  musl-dev \
+  libva-dev \
+  libvdpau-dev \
+  libvorbis-dev \
+  libxcb1-dev \
+  libxcb-shm0-dev \
+  libxcb-xfixes0-dev \
+  pkg-config \
+  texinfo \
+  zlib1g-dev \
+  git-core \
   nasm \
   yasm && \
-# Add FFmpeg dependencies
-apk add --no-cache --update \
-  libgcc \
-  libstdc++ \
-  freetype-dev && \
-# Add system packages
-apk add --no-cache --update \
-  bash \
-  coreutils \
-  curl \
-  git && \
 #------------------
 # Setup directories
 #------------------
@@ -62,23 +52,25 @@ git clone --branch v1.3.15 https://github.com/Netflix/vmaf.git && \
 git clone --depth 1 https://github.com/xiph/opus.git && \
 git clone --depth 1 https://git.videolan.org/git/x264 && \
 git clone https://github.com/videolan/x265.git && \
-curl -O https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
-tar xjf ffmpeg-snapshot.tar.bz2 && \
+git clone https://github.com/OpenVisualCloud/SVT-HEVC && \
+git clone https://github.com/FFmpeg/FFmpeg ffmpeg && \
 #-------------------
 # Compile z.lib/zimg
 #-------------------
 cd /ffmpeg/ffmpeg_sources/zimg && \
 ./autogen.sh && \
-./configure && \
-make ${MAKEFLAGS} && \
+./configure \
+--enable-static \
+--disable-shared && \
+make -j $(nproc) && \
 make install && \
 #----------------
 # Compile libvmaf
 #----------------
 cd /ffmpeg/ffmpeg_sources/vmaf/ptools && \
-make ${MAKEFLAGS} && \
+make -j $(nproc) && \
 cd ../wrapper && \
-make ${MAKEFLAGS} && \
+make -j $(nproc) && \
 cd .. && \
 make install && \
 #----------------
@@ -88,51 +80,46 @@ cd /ffmpeg/ffmpeg_sources/opus && \
 ./autogen.sh && \
 ./configure \
 --disable-shared && \
-make ${MAKEFLAGS} && \
+make -j $(nproc) && \
 make install && \
+#-----------------
+# Compile SVT-HEVC
+#-----------------
+cd /ffmpeg/ffmpeg_sources/SVT-HEVC/Build/linux && \
+./build.sh release static install && \
 #-------------
 # Compile x264
 #-------------
 cd /ffmpeg/ffmpeg_sources/x264 && \
 ./configure \
---bindir="$HOME/bin" \
 --enable-static \
 --enable-pic && \
-make ${MAKEFLAGS} && \
+make -j $(nproc) && \
 make install && \
 #-------------
 # Compile x265
 #-------------
 cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
-mkdir -p 8bit 10bit && \
-# 10 bit
-cd 10bit && \
 cmake -G "Unix Makefiles" \
-../../../source \
--DHIGH_BIT_DEPTH=ON \
--DEXPORT_C_API=OFF \
 -DENABLE_SHARED=OFF \
--DENABLE_CLI=OFF && \
-make ${MAKEFLAGS} && \
-# 8 bit
-cd ../8bit && \
-ln -sf ../10bit/libx265.a libx265_main10.a && \
-cmake -G "Unix Makefiles" \
-../../../source \
--DEXTRA_LIB="x265_main10.a" \
--DEXTRA_LINK_FLAGS=-L. \
--DLINKED_10BIT=ON && \
-make ${MAKEFLAGS} && \
-mv libx265.a libx265_main.a && \
-ar -M </app/libx265.mri && \
+-DSTATIC_LINK_CRT=ON \
+-DENABLE_CLI=OFF \
+../../source && \
+sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc && \
+./multilib.sh && \
 make install && \
 #---------------
 # Compile ffmpeg
 #---------------
 cd /ffmpeg/ffmpeg_sources/ffmpeg && \
+git apply /ffmpeg/ffmpeg_sources/SVT-HEVC/ffmpeg_plugin/0001*.patch && \
 ./configure \
 --pkg-config-flags="--static" \
+--extra-cflags="-I/usr/local/include -static" \
+--extra-ldflags="-L/usr/local/lib -static" \
 --extra-libs="-lpthread -lm" \
+--disable-shared \
+--enable-static \
 --disable-debug \
 --disable-doc \
 --disable-ffplay \
@@ -143,44 +130,21 @@ cd /ffmpeg/ffmpeg_sources/ffmpeg && \
 --enable-version3 \
 --enable-libzimg \
 --enable-libopus \
+--enable-libsvthevc \
 --enable-libx264 \
 --enable-libx265 && \
-make ${MAKEFLAGS} && \
+make -j $(nproc) && \
 make install && \
-hash -r && \
-#----------------------------------------------------
-# Clean up directories and packages after compilation
-#----------------------------------------------------
-rm -rf /ffmpeg && \
-# Remove build packages
-apk del \
-  autoconf \
-  automake \
-  binutils \
-  bzip2-dev \
-  cmake \
-  file \
-  fortify-headers \
-  g++ \
-  gcc \
-  gmp \
-  isl \
-  libatomic \
-  libc-dev \
-  libgomp \
-  libmagic \
-  libtool \
-  make \
-  mpc1 \
-  mpfr3 \
-  musl-dev \
-  nasm \
-  yasm && \
-# Remove system packages
-apk del \
-  coreutils \
-  git && \
-rm -rf /var/cache/apk/*
+hash -r
+
+# Use Alpine as a base image
+FROM alpine:latest
+
+# Set the working directory to /app
+WORKDIR /app
+
+COPY --from=build /usr/local/bin/ff* /usr/local/bin/
+
 #---------------------------------------
 # Run ffmpeg when the container launches
 #---------------------------------------
