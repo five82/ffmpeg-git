@@ -50,7 +50,7 @@ cd /ffmpeg/ffmpeg_sources && \
 git clone https://github.com/sekrit-twc/zimg.git && \
 git clone --branch v1.3.15 https://github.com/Netflix/vmaf.git && \
 git clone --depth 1 https://github.com/xiph/opus.git && \
-git clone --depth 1 https://git.videolan.org/git/x264 && \
+git clone --depth 1 https://code.videolan.org/videolan/x264.git && \
 git clone https://github.com/videolan/x265.git && \
 git clone https://github.com/OpenVisualCloud/SVT-HEVC && \
 git clone https://github.com/FFmpeg/FFmpeg ffmpeg && \
