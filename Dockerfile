@@ -1,4 +1,4 @@
-# Use Debian as a base image
+# Use Debian for our multistage build image
 FROM debian:stable-slim AS build
 
 # Set the working directory to /app
@@ -137,12 +137,17 @@ make -j $(nproc) && \
 make install && \
 hash -r
 
-# Use Alpine as a base image
-FROM alpine:latest
+# Use Debian for our multistage base image
+FROM debian:stable-slim
 
 # Set the working directory to /app
 WORKDIR /app
 
+# Copy the vmaf models over
+RUN mkdir /usr/local/share/model
+COPY --from=build /ffmpeg/ffmpeg_sources/vmaf/model /usr/local/share/model
+
+# Copy the binaries
 COPY --from=build /usr/local/bin/ff* /usr/local/bin/
 
 #---------------------------------------
