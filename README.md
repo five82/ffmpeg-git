@@ -1,8 +1,8 @@
-# ffmpeg-vmaf
+# ffmpeg-git
 
-Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-vmaf/
+Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-git/
 
-```docker pull five82/ffmpeg-vmaf```
+```docker pull five82/ffmpeg-git```
 
 FFmpeg container compiled from git master HEAD with the following configuration:
 
