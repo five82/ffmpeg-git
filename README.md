@@ -13,8 +13,8 @@ ffmpeg, ffprobe, and x265 binaries are included.
 Run ffmpeg commands using the example below:
 
     docker run \
-    --name ffmpeg-vmaf \
+    --name ffmpeg-git \
     -v <path/to/input/dir>:/input \
     -v <path/to/output/dir>:/output \
-    five82/ffmpeg-vmaf \
+    five82/ffmpeg-git \
     ffmpeg -i /input/input.mkv -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 384k /output/output.mkv
