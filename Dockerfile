@@ -103,7 +103,8 @@ cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
 cmake -G "Unix Makefiles" \
 -DENABLE_SHARED=OFF \
 -DSTATIC_LINK_CRT=ON \
--DENABLE_CLI=OFF \
+-DENABLE_CLI=ON \
+-DCMAKE_EXE_LINKER_FLAGS="-static" \
 ../../source && \
 sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc && \
 ./multilib.sh && \
@@ -149,6 +150,7 @@ COPY --from=build /ffmpeg/ffmpeg_sources/vmaf/model /usr/local/share/model
 
 # Copy the binaries
 COPY --from=build /usr/local/bin/ff* /usr/local/bin/
+COPY --from=build /usr/local/bin/x265 /usr/local/bin/
 
 #---------------------------------------
 # Run ffmpeg when the container launches
