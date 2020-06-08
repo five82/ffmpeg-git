@@ -96,19 +96,19 @@ cd /ffmpeg/ffmpeg_sources/x264 && \
 --enable-pic && \
 make -j $(nproc) && \
 make install && \
-#-------------
-# Compile x265
-#-------------
+#-------------------------
+# Compile libx265 multilib
+#-------------------------
 cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
 cmake -G "Unix Makefiles" \
 -DENABLE_SHARED=OFF \
 -DSTATIC_LINK_CRT=ON \
--DENABLE_CLI=ON \
--DCMAKE_EXE_LINKER_FLAGS="-static" \
+-DENABLE_CLI=OFF \
 ../../source && \
 sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc && \
 ./multilib.sh && \
 make install && \
+make clean && \
 #---------------
 # Compile ffmpeg
 #---------------
@@ -136,7 +136,21 @@ git apply /ffmpeg/ffmpeg_sources/SVT-HEVC/ffmpeg_plugin/0001*.patch && \
 --enable-libx265 && \
 make -j $(nproc) && \
 make install && \
-hash -r
+hash -r && \
+#--------------------
+# Compile x265 10 bit
+#--------------------
+cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
+git reset --hard HEAD && \
+cmake -G "Unix Makefiles" \
+-DHIGH_BIT_DEPTH=ON \
+-DENABLE_SHARED=OFF \
+-DSTATIC_LINK_CRT=ON \
+-DENABLE_CLI=ON \
+-DCMAKE_EXE_LINKER_FLAGS="-static" \
+../../source && \
+make -j $(nproc) && \
+make install
 
 # Use Debian for our multistage base image
 FROM debian:stable-slim
