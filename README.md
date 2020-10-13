@@ -1,5 +1,7 @@
 # ffmpeg-git
 
+*This repo is no longer being maintained*
+
 Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-git/
 
 ```docker pull five82/ffmpeg-git```
