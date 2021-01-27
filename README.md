@@ -8,7 +8,7 @@ FFmpeg container compiled with the following configuration:
 
 ```--disable-static --enable-shared --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-version3 --enable-libvmaf --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265 --enable-libsvthevc --enable-libsvtvp9```
 
-The script will build ffmpeg and ffprobe binaries. libx265 has 8,10 and 12 bit multilib support. libvmaf is intentionally versioned to maintain testing consistency.
+The Dockerfile will build ffmpeg and ffprobe binaries. libx265 has 8,10 and 12 bit multilib support. libvmaf is intentionally versioned to maintain testing consistency.
 
 Run ffmpeg commands using the example below:
 
