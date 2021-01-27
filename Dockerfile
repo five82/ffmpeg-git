@@ -1,5 +1,19 @@
-# Use Debian for our multistage build image
-FROM debian:stable-slim AS build
+# Custom ffmpeg Dockerfile
+
+# Versions:
+
+# ffmpeg     - git master HEAD
+# libvmaf    - 2.1.1
+# libzimg    - git master HEAD
+# libopus    - git master HEAD
+# libx264    - git master HEAD
+# libx265    - git master HEAD
+# libsvthevc - git master HEAD
+# libsvtvp9  - git master HEAD
+
+
+# Use Debian for our base image
+FROM docker.io/debian:stable-slim AS build
 
 # Set the working directory to /app
 WORKDIR /app
@@ -11,15 +25,15 @@ ADD . /app
 # Update and install dependencies
 #--------------------------------
 RUN \
-apt-get update && \
-# Add build packages
-apt-get install -y \
---no-install-recommends \
+apt update && \
+apt install -y \
+  --no-install-recommends \
   autoconf \
   automake \
   build-essential \
   ca-certificates \
   cmake \
+  doxygen \
   libasound2 \
   libass-dev \
   libfreetype6-dev \
@@ -33,12 +47,21 @@ apt-get install -y \
   libxcb1-dev \
   libxcb-shm0-dev \
   libxcb-xfixes0-dev \
+  ninja-build \
   pkg-config \
+  python3 \
+  python3-pip \
+  python3-setuptools \
+  python3-wheel \
   texinfo \
   zlib1g-dev \
   git-core \
   nasm \
   yasm && \
+#--------------
+# Install meson
+#--------------
+pip3 install meson && \
 #------------------
 # Setup directories
 #------------------
@@ -48,52 +71,55 @@ mkdir -p /input /output /ffmpeg/ffmpeg_sources && \
 #----------------
 cd /ffmpeg/ffmpeg_sources && \
 git clone https://github.com/sekrit-twc/zimg.git && \
-git clone --branch v1.3.15 https://github.com/Netflix/vmaf.git && \
+git clone --branch v2.1.1 https://github.com/Netflix/vmaf.git && \
 git clone --depth 1 https://github.com/xiph/opus.git && \
 git clone --depth 1 https://code.videolan.org/videolan/x264.git && \
 git clone https://github.com/videolan/x265.git && \
 git clone https://github.com/OpenVisualCloud/SVT-HEVC && \
+git clone https://github.com/OpenVisualCloud/SVT-VP9.git && \
 git clone https://github.com/FFmpeg/FFmpeg ffmpeg && \
 #-------------------
 # Compile z.lib/zimg
 #-------------------
 cd /ffmpeg/ffmpeg_sources/zimg && \
 ./autogen.sh && \
-./configure \
---enable-static \
---disable-shared && \
+./configure && \
 make -j $(nproc) && \
 make install && \
 #----------------
 # Compile libvmaf
 #----------------
-cd /ffmpeg/ffmpeg_sources/vmaf/ptools && \
-make -j $(nproc) && \
-cd ../wrapper && \
-make -j $(nproc) && \
-cd .. && \
-make install && \
+cd /ffmpeg/ffmpeg_sources/vmaf/libvmaf && \
+meson build --buildtype release && \
+ninja -vC build && \
+ninja -vC build install && \
 #----------------
 # Compile libopus
 #----------------
 cd /ffmpeg/ffmpeg_sources/opus && \
 ./autogen.sh && \
-./configure \
---disable-shared && \
+./configure && \
 make -j $(nproc) && \
 make install && \
-#-----------------
-# Compile SVT-HEVC
-#-----------------
+#-------------------
+# Compile libsvthevc
+#-------------------
 cd /ffmpeg/ffmpeg_sources/SVT-HEVC/Build/linux && \
-./build.sh release static install && \
-#-------------
-# Compile x264
-#-------------
+./build.sh release install && \
+#------------------
+# Compile libsvtvp9
+#------------------
+cd /ffmpeg/ffmpeg_sources/SVT-VP9/Build && \
+cmake .. -DCMAKE_BUILD_TYPE=Release && \
+make -j $(nproc) && \
+make install && \
+#----------------
+# Compile libx264
+#----------------
 cd /ffmpeg/ffmpeg_sources/x264 && \
 ./configure \
---enable-static \
---enable-pic && \
+  --enable-static \
+  --enable-pic && \
 make -j $(nproc) && \
 make install && \
 #-------------------------
@@ -101,10 +127,8 @@ make install && \
 #-------------------------
 cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
 cmake -G "Unix Makefiles" \
--DENABLE_SHARED=OFF \
--DSTATIC_LINK_CRT=ON \
--DENABLE_CLI=OFF \
-../../source && \
+  -DENABLE_CLI=OFF \
+  ../../source && \
 sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc && \
 ./multilib.sh && \
 make install && \
@@ -113,59 +137,57 @@ make clean && \
 # Compile ffmpeg
 #---------------
 cd /ffmpeg/ffmpeg_sources/ffmpeg && \
+# apply libsvthevc patches
 git apply /ffmpeg/ffmpeg_sources/SVT-HEVC/ffmpeg_plugin/0001*.patch && \
+# apply libsvtvp9 patch
+git apply /ffmpeg/ffmpeg_sources/SVT-VP9/ffmpeg_plugin/master-0001-Add-ability-for-ffmpeg-to-run-svt-vp9.patch && \
 ./configure \
---pkg-config-flags="--static" \
---extra-cflags="-I/usr/local/include -static" \
---extra-ldflags="-L/usr/local/lib -static" \
---extra-libs="-lpthread -lm" \
---disable-shared \
---enable-static \
---disable-debug \
---disable-doc \
---disable-ffplay \
---enable-ffprobe \
---enable-gpl \
---enable-libfreetype \
---enable-libvmaf \
---enable-version3 \
---enable-libzimg \
---enable-libopus \
---enable-libsvthevc \
---enable-libx264 \
---enable-libx265 && \
+  --disable-static \
+  --enable-shared \
+  --disable-debug \
+  --disable-doc \
+  --disable-ffplay \
+  --enable-ffprobe \
+  --enable-gpl \
+  --enable-libfreetype \
+  --enable-version3 \
+  --enable-libvmaf \
+  --enable-libzimg \
+  --enable-libopus \
+  --enable-libx264 \
+  --enable-libx265 \
+  --enable-libsvthevc \
+  --enable-libsvtvp9 && \
 make -j $(nproc) && \
 make install && \
 hash -r && \
-#--------------------
-# Compile x265 10 bit
-#--------------------
-cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
-git reset --hard HEAD && \
-cmake -G "Unix Makefiles" \
--DHIGH_BIT_DEPTH=ON \
--DENABLE_SHARED=OFF \
--DSTATIC_LINK_CRT=ON \
--DENABLE_CLI=ON \
--DCMAKE_EXE_LINKER_FLAGS="-static" \
-../../source && \
-make -j $(nproc) && \
-make install
-
-# Use Debian for our multistage base image
-FROM debian:stable-slim
-
-# Set the working directory to /app
-WORKDIR /app
-
-# Copy the vmaf models over
-RUN mkdir /usr/local/share/model
-COPY --from=build /ffmpeg/ffmpeg_sources/vmaf/model /usr/local/share/model
-
-# Copy the binaries
-COPY --from=build /usr/local/bin/ff* /usr/local/bin/
-COPY --from=build /usr/local/bin/x265 /usr/local/bin/
-
+#----------------------------------------------------
+# Clean up directories and packages after compilation
+#----------------------------------------------------
+pip3 uninstall meson -y && \
+apt purge -y \
+  autoconf \
+  automake \
+  build-essential \
+  ca-certificates \
+  cmake \
+  doxygen \
+  ninja-build \
+  pkg-config \
+  python3-pip \
+  python3-setuptools \
+  python3-wheel \
+  texinfo \
+  git-core \
+  nasm \
+  yasm && \
+apt autoremove -y && \
+apt install -y \
+  --no-install-recommends \
+  libsdl2-dev && \
+apt clean && \
+apt autoclean && \
+rm -rf /ffmpeg
 #---------------------------------------
 # Run ffmpeg when the container launches
 #---------------------------------------
