@@ -6,7 +6,7 @@ Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-git/
 
 FFmpeg container compiled with the following configuration:
 
-```--disable-static --enable-shared --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-version3 --enable-libvmaf --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265 --enable-libsvthevc --enable-libsvtvp9```
+```--disable-static --enable-shared --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-version3 --enable-libvmaf --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265 --enable-libsvthevc --enable-libsvtvp9 --enable-libsvtav1```
 
 The Dockerfile will build ffmpeg and ffprobe binaries. libx265 has 8,10 and 12 bit multilib support. libvmaf is intentionally versioned to maintain testing consistency.
 
@@ -29,3 +29,4 @@ libx264    - git master HEAD
 libx265    - git master HEAD
 libsvthevc - git master HEAD
 libsvtvp9  - git master HEAD
+libsvtav1  - git master HEAD

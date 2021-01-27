@@ -10,6 +10,7 @@
 # libx265    - git master HEAD
 # libsvthevc - git master HEAD
 # libsvtvp9  - git master HEAD
+# libsvtav1  - git master HEAD
 
 
 # Use Debian for our base image
@@ -77,6 +78,7 @@ git clone --depth 1 https://code.videolan.org/videolan/x264.git && \
 git clone https://github.com/videolan/x265.git && \
 git clone https://github.com/OpenVisualCloud/SVT-HEVC && \
 git clone https://github.com/OpenVisualCloud/SVT-VP9.git && \
+git clone https://github.com/AOMediaCodec/SVT-AV1.git && \
 git clone https://github.com/FFmpeg/FFmpeg ffmpeg && \
 #-------------------
 # Compile z.lib/zimg
@@ -111,6 +113,13 @@ cd /ffmpeg/ffmpeg_sources/SVT-HEVC/Build/linux && \
 #------------------
 cd /ffmpeg/ffmpeg_sources/SVT-VP9/Build && \
 cmake .. -DCMAKE_BUILD_TYPE=Release && \
+make -j $(nproc) && \
+make install && \
+#------------------
+# Compile libsvtav1
+#------------------
+cd /ffmpeg/ffmpeg_sources/SVT-AV1/Build && \
+cmake .. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release && \
 make -j $(nproc) && \
 make install && \
 #----------------
@@ -157,7 +166,8 @@ git apply /ffmpeg/ffmpeg_sources/SVT-VP9/ffmpeg_plugin/master-0001-Add-ability-f
   --enable-libx264 \
   --enable-libx265 \
   --enable-libsvthevc \
-  --enable-libsvtvp9 && \
+  --enable-libsvtvp9 \
+  --enable-libsvtav1 && \
 make -j $(nproc) && \
 make install && \
 hash -r && \
