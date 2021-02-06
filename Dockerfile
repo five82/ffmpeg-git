@@ -95,6 +95,8 @@ cd /ffmpeg/ffmpeg_sources/vmaf/libvmaf && \
 meson build --buildtype release && \
 ninja -vC build && \
 ninja -vC build install && \
+mkdir -p /usr/local/share/model/ && \
+cp -r /ffmpeg/ffmpeg_sources/vmaf/model/* /usr/local/share/model/ && \
 #----------------
 # Compile libopus
 #----------------
@@ -131,15 +133,14 @@ cd /ffmpeg/ffmpeg_sources/x264 && \
   --enable-pic && \
 make -j $(nproc) && \
 make install && \
-#-------------------------
-# Compile libx265 multilib
-#-------------------------
+#----------------
+# Compile libx265
+#----------------
 cd /ffmpeg/ffmpeg_sources/x265/build/linux && \
 cmake -G "Unix Makefiles" \
+  -DHIGH_BIT_DEPTH=on \
   -DENABLE_CLI=OFF \
   ../../source && \
-sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc && \
-./multilib.sh && \
 make install && \
 make clean && \
 #---------------

@@ -1,6 +1,6 @@
 # ffmpeg-git
 
-Available on Docker Hub at https://hub.docker.com/r/five82/ffmpeg-git/
+Available on [Docker Hub][1].
 
 ```docker pull five82/ffmpeg-git```
 
@@ -8,11 +8,12 @@ FFmpeg container compiled with the following configuration:
 
 ```--disable-static --enable-shared --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-version3 --enable-libvmaf --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265 --enable-libsvthevc --enable-libsvtvp9 --enable-libsvtav1```
 
-The Dockerfile will build ffmpeg and ffprobe binaries. libx265 has 8,10 and 12 bit multilib support. libvmaf is intentionally versioned to maintain testing consistency.
+The Dockerfile will build ffmpeg and ffprobe binaries. The libx264 encoder is 8 bit. The libx265 encoder is 10 bit. libvmaf is intentionally versioned to maintain testing consistency.
 
 Run ffmpeg commands using the example below:
 
     docker run \
+    --rm \
     --name ffmpeg-git \
     -v <path/to/input/dir>:/input \
     -v <path/to/output/dir>:/output \
@@ -21,12 +22,14 @@ Run ffmpeg commands using the example below:
 
 Versions:
 
-ffmpeg     - git master HEAD
-libvmaf    - 2.1.1
-libzimg    - git master HEAD
-libopus    - git master HEAD
-libx264    - git master HEAD
-libx265    - git master HEAD
-libsvthevc - git master HEAD
-libsvtvp9  - git master HEAD
-libsvtav1  - git master HEAD
+- ffmpeg     - git master HEAD
+- libvmaf    - 2.1.1
+- libzimg    - git master HEAD
+- libopus    - git master HEAD
+- libx264    - git master HEAD
+- libx265    - git master HEAD
+- libsvthevc - git master HEAD
+- libsvtvp9  - git master HEAD
+- libsvtav1  - git master HEAD
+
+[1]: https://hub.docker.com/r/five82/ffmpeg-git/ "ffmpeg-git"
