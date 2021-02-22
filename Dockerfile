@@ -20,14 +20,14 @@ FROM docker.io/debian:stable-slim AS build
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-ADD . /app
+COPY . /app
 
 #--------------------------------
 # Update and install dependencies
 #--------------------------------
 RUN \
-apt update && \
-apt install -y \
+apt-get update && \
+apt-get install -y \
   --no-install-recommends \
   autoconf \
   automake \
@@ -62,7 +62,7 @@ apt install -y \
 #--------------
 # Install meson
 #--------------
-pip3 install meson && \
+pip3 install --no-cache-dir meson==0.57.1 && \
 #------------------
 # Setup directories
 #------------------
@@ -176,7 +176,7 @@ hash -r && \
 # Clean up directories and packages after compilation
 #----------------------------------------------------
 pip3 uninstall meson -y && \
-apt purge -y \
+apt-get purge -y \
   autoconf \
   automake \
   build-essential \
@@ -192,12 +192,13 @@ apt purge -y \
   git-core \
   nasm \
   yasm && \
-apt autoremove -y && \
-apt install -y \
+apt-get autoremove -y && \
+apt-get install -y \
   --no-install-recommends \
   libsdl2-dev && \
-apt clean && \
-apt autoclean && \
+apt-get clean && \
+apt-get autoclean && \
+rm -rf /var/lib/apt/lists/* && \
 rm -rf /ffmpeg
 #---------------------------------------
 # Run ffmpeg when the container launches
