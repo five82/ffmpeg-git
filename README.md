@@ -31,6 +31,6 @@ Versions:
 - libsvthevc - git master HEAD
 - libsvtvp9  - git master HEAD
 - libsvtav1  - git master HEAD
-- libaom     - git master HEADS
+- libaom     - git master HEAD
 
 [1]: https://hub.docker.com/r/five82/ffmpeg-git/ "ffmpeg-git"
