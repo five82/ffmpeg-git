@@ -23,7 +23,7 @@ git clone https://github.com/FFmpeg/FFmpeg ffmpeg
 cd /ffmpeg/ffmpeg_sources/zimg || exit
 ./autogen.sh
 ./configure
-make -j $("nproc")
+make -j "$(nproc)"
 make install
 
 #----------------
@@ -42,7 +42,7 @@ cp -r /ffmpeg/ffmpeg_sources/vmaf/model/* /usr/local/share/model/
 cd /ffmpeg/ffmpeg_sources/opus || exit
 ./autogen.sh
 ./configure
-make -j $("nproc")
+make -j "$(nproc)"
 make install
 
 #-------------------
@@ -56,7 +56,7 @@ cd /ffmpeg/ffmpeg_sources/SVT-HEVC/Build/linux || exit
 #------------------
 cd /ffmpeg/ffmpeg_sources/SVT-VP9/Build || exit
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j $("nproc")
+make -j "$(nproc)"
 make install
 
 #------------------
@@ -64,7 +64,7 @@ make install
 #------------------
 cd /ffmpeg/ffmpeg_sources/SVT-AV1/Build || exit
 cmake .. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
-make -j $("nproc")
+make -j "$(nproc)"
 make install
 
 #----------------
@@ -74,7 +74,7 @@ cd /ffmpeg/ffmpeg_sources/x264 || exit
 ./configure \
   --enable-static \
   --enable-pic
-make -j $("nproc")
+make -j "$(nproc)"
 make install
 
 #----------------
@@ -114,6 +114,6 @@ git apply /ffmpeg/ffmpeg_sources/SVT-VP9/ffmpeg_plugin/master-0001-Add-ability-f
   --enable-libsvthevc \
   --enable-libsvtvp9 \
   --enable-libsvtav1
-make -j $("nproc")
+make -j "$(nproc)"
 make install
 hash -r
