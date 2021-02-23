@@ -86,7 +86,7 @@ git clone https://github.com/FFmpeg/FFmpeg ffmpeg && \
 cd /ffmpeg/ffmpeg_sources/zimg && \
 ./autogen.sh && \
 ./configure && \
-make -j $(nproc) && \
+make -j $("nproc") && \
 make install && \
 #----------------
 # Compile libvmaf
@@ -103,7 +103,7 @@ cp -r /ffmpeg/ffmpeg_sources/vmaf/model/* /usr/local/share/model/ && \
 cd /ffmpeg/ffmpeg_sources/opus && \
 ./autogen.sh && \
 ./configure && \
-make -j $(nproc) && \
+make -j $("nproc") && \
 make install && \
 #-------------------
 # Compile libsvthevc
@@ -115,14 +115,14 @@ cd /ffmpeg/ffmpeg_sources/SVT-HEVC/Build/linux && \
 #------------------
 cd /ffmpeg/ffmpeg_sources/SVT-VP9/Build && \
 cmake .. -DCMAKE_BUILD_TYPE=Release && \
-make -j $(nproc) && \
+make -j $("nproc") && \
 make install && \
 #------------------
 # Compile libsvtav1
 #------------------
 cd /ffmpeg/ffmpeg_sources/SVT-AV1/Build && \
 cmake .. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release && \
-make -j $(nproc) && \
+make -j $("nproc") && \
 make install && \
 #----------------
 # Compile libx264
@@ -131,7 +131,7 @@ cd /ffmpeg/ffmpeg_sources/x264 && \
 ./configure \
   --enable-static \
   --enable-pic && \
-make -j $(nproc) && \
+make -j $("nproc") && \
 make install && \
 #----------------
 # Compile libx265
@@ -175,7 +175,7 @@ hash -r && \
 #----------------------------------------------------
 # Clean up directories and packages after compilation
 #----------------------------------------------------
-pip3 uninstall meson -y && \
+pip3 uninstall meson==0.57.1 -y && \
 apt-get purge -y \
   autoconf \
   automake \
