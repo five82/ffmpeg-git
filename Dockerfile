@@ -25,6 +25,8 @@ COPY . /app
 #--------------------------------
 # Update and install dependencies
 #--------------------------------
+# No, we're not going to version every apt package dependency.
+# That's a bad idea in practice and will cause problems.
 # hadolint ignore=DL3008
 RUN \
 apt-get update && \
