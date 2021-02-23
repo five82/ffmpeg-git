@@ -22,7 +22,7 @@ Run ffmpeg commands using the example below:
 
 Versions:
 
-- ffmpeg     - git master HEAD
+- ffmpeg      - git master HEAD
 - libvmaf    - 2.1.1
 - libzimg    - git master HEAD
 - libopus    - git master HEAD
