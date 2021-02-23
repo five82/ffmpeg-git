@@ -15,6 +15,7 @@ git clone https://github.com/videolan/x265.git
 git clone https://github.com/OpenVisualCloud/SVT-HEVC
 git clone https://github.com/OpenVisualCloud/SVT-VP9.git
 git clone https://github.com/AOMediaCodec/SVT-AV1.git
+git clone https://aomedia.googlesource.com/aom
 git clone https://github.com/FFmpeg/FFmpeg ffmpeg
 
 #-------------------
@@ -89,6 +90,16 @@ make install
 make clean
 
 #---------------
+# Compile libaom
+#---------------
+cd /ffmpeg/ffmpeg_sources/aom || exit
+mkdir -p ../aom_build
+cd ../aom_build || exit
+cmake /ffmpeg/ffmpeg_sources/aom -DBUILD_SHARED_LIBS=1
+make -j "$(nproc)"
+make install
+
+#---------------
 # Compile ffmpeg
 #---------------
 cd /ffmpeg/ffmpeg_sources/ffmpeg || exit
@@ -113,7 +124,8 @@ git apply /ffmpeg/ffmpeg_sources/SVT-VP9/ffmpeg_plugin/master-0001-Add-ability-f
   --enable-libx265 \
   --enable-libsvthevc \
   --enable-libsvtvp9 \
-  --enable-libsvtav1
+  --enable-libsvtav1 \
+  --enable-libaom
 make -j "$(nproc)"
 make install
 hash -r

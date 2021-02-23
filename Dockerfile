@@ -11,6 +11,7 @@
 # libsvthevc - git master HEAD
 # libsvtvp9  - git master HEAD
 # libsvtav1  - git master HEAD
+# libaom     - git master HEAD
 
 
 # Use Debian for our base image
