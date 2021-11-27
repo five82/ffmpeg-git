@@ -46,20 +46,6 @@ cd /ffmpeg/ffmpeg_sources/opus || exit
 make -j "$(nproc)"
 make install
 
-#-------------------
-# Compile libsvthevc
-#-------------------
-cd /ffmpeg/ffmpeg_sources/SVT-HEVC/Build/linux || exit
-./build.sh release install
-
-#------------------
-# Compile libsvtvp9
-#------------------
-cd /ffmpeg/ffmpeg_sources/SVT-VP9/Build || exit
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j "$(nproc)"
-make install
-
 #------------------
 # Compile libsvtav1
 #------------------
@@ -122,8 +108,6 @@ git apply /ffmpeg/ffmpeg_sources/SVT-VP9/ffmpeg_plugin/master-0001-Add-ability-f
   --enable-libopus \
   --enable-libx264 \
   --enable-libx265 \
-  --enable-libsvthevc \
-  --enable-libsvtvp9 \
   --enable-libsvtav1 \
   --enable-libaom
 make -j "$(nproc)"
