@@ -6,7 +6,7 @@ Available on [Docker Hub][1].
 
 FFmpeg container compiled with the following configuration:
 
-```--disable-static --enable-shared --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-version3 --enable-libvmaf --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265 --enable-libsvthevc --enable-libsvtvp9 --enable-libsvtav1 --enable-libaom```
+```--disable-static --enable-shared --disable-debug --disable-doc --disable-ffplay --enable-ffprobe --enable-gpl --enable-libfreetype --enable-version3 --enable-libvmaf --enable-libzimg --enable-libopus --enable-libx264 --enable-libx265 --enable-libsvtav1 --enable-libaom```
 
 The Dockerfile will build ffmpeg and ffprobe binaries. The libx264 encoder is 8 bit. The libx265 encoder is 10 bit. libvmaf is intentionally versioned to maintain testing consistency.
 

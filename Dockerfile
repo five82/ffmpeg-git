@@ -8,8 +8,6 @@
 # libopus    - git master HEAD
 # libx264    - git master HEAD
 # libx265    - git master HEAD
-# libsvthevc - git master HEAD
-# libsvtvp9  - git master HEAD
 # libsvtav1  - git master HEAD
 # libaom     - git master HEAD
 
