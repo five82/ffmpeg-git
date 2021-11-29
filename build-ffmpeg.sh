@@ -8,7 +8,7 @@
 #----------------
 cd /ffmpeg/ffmpeg_sources || exit
 git clone https://github.com/sekrit-twc/zimg.git
-git clone --branch v2.1.1 https://github.com/Netflix/vmaf.git
+git clone --branch v2.3.0 https://github.com/Netflix/vmaf.git
 git clone --depth 1 https://github.com/xiph/opus.git
 git clone --depth 1 https://code.videolan.org/videolan/x264.git
 git clone https://github.com/videolan/x265.git
