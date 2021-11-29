@@ -87,10 +87,6 @@ make install
 # Compile ffmpeg
 #---------------
 cd /ffmpeg/ffmpeg_sources/ffmpeg || exit
-# apply libsvthevc patches
-git apply /ffmpeg/ffmpeg_sources/SVT-HEVC/ffmpeg_plugin/0001*.patch
-# apply libsvtvp9 patch
-git apply /ffmpeg/ffmpeg_sources/SVT-VP9/ffmpeg_plugin/master-0001-Add-ability-for-ffmpeg-to-run-svt-vp9.patch
 ./configure \
   --disable-static \
   --enable-shared \
