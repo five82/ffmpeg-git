@@ -19,45 +19,62 @@ git clone https://github.com/FFmpeg/FFmpeg ffmpeg
 #-------------------
 # Compile z.lib/zimg
 #-------------------
+echo "** Starting zimg compilation **"
 cd /ffmpeg/ffmpeg_sources/zimg || exit
 ./autogen.sh
-./configure
+./configure \
+  --enable-static \
+  --disable-shared
 make -j "$(nproc)"
 make install
 
 #----------------
 # Compile libvmaf
 #----------------
+echo "** Starting libvmaf compilation **"
 cd /ffmpeg/ffmpeg_sources/vmaf/libvmaf || exit
-meson build --buildtype release
+meson build \
+  --buildtype release \
+  --default-library=static \
+  -Denable_tests=false \
+  -Denable_docs=false \
+  -Dbuilt_in_models=true
 ninja -vC build
 ninja -vC build install
-mkdir -p /usr/local/share/model/
-cp -r /ffmpeg/ffmpeg_sources/vmaf/model/* /usr/local/share/model/
 
 #----------------
 # Compile libopus
 #----------------
+echo "** Starting libopus compilation **"
 cd /ffmpeg/ffmpeg_sources/opus || exit
 ./autogen.sh
-./configure
+./configure \
+  --disable-shared \
+  --enable-static
 make -j "$(nproc)"
 make install
 
 #------------------
 # Compile libsvtav1
 #------------------
+echo "** Starting libsvtav1 compilation **"
 cd /ffmpeg/ffmpeg_sources/SVT-AV1/Build || exit
-cmake .. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+cmake .. \
+  -G"Unix Makefiles" \
+  -DBUILD_SHARED_LIBS=OFF \
+  -DCMAKE_BUILD_TYPE=Release
 make -j "$(nproc)"
 make install
 
 #----------------
 # Compile libx264
 #----------------
+echo "** Starting libx264 compilation **"
 cd /ffmpeg/ffmpeg_sources/x264 || exit
 ./configure \
   --enable-static \
+  --disable-shared \
+  --disable-opencl \
   --enable-pic
 make -j "$(nproc)"
 make install
@@ -65,31 +82,42 @@ make install
 #----------------
 # Compile libx265
 #----------------
+echo "** Starting libx265 compilation **"
 cd /ffmpeg/ffmpeg_sources/x265/build/linux || exit
 cmake -G "Unix Makefiles" \
-  -DHIGH_BIT_DEPTH=on \
-  -DENABLE_CLI=OFF \
+  -DENABLE_SHARED:BOOL=OFF \
+  -DCMAKE_EXE_LINKER_FLAGS="-static" \
+  -DSTATIC_LINK_CRT:BOOL=ON \
+  -DHIGH_BIT_DEPTH:BOOL=ON \
   ../../source
+sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc
+make -j "$(nproc)"
 make install
-make clean
 
 #---------------
 # Compile libaom
 #---------------
+echo "** Starting libaom compilation **"
 cd /ffmpeg/ffmpeg_sources/aom || exit
 mkdir -p ../aom_build
 cd ../aom_build || exit
-cmake /ffmpeg/ffmpeg_sources/aom -DBUILD_SHARED_LIBS=1
+cmake /ffmpeg/ffmpeg_sources/aom \
+  -DBUILD_SHARED_LIBS=0 \
+  -DENABLE_SHARED:BOOL=OFF
 make -j "$(nproc)"
 make install
 
 #---------------
 # Compile ffmpeg
 #---------------
+echo "** Starting ffmpeg compilation **"
 cd /ffmpeg/ffmpeg_sources/ffmpeg || exit
 ./configure \
-  --disable-static \
-  --enable-shared \
+  --ld="g++" \
+  --pkg-config-flags="--static" \
+  --extra-cflags="-I/usr/local/include -static" \
+  --extra-ldflags="-L/usr/local/lib -static" \
+  --extra-libs="-lpthread -lm -lz" \
   --disable-debug \
   --disable-doc \
   --disable-ffplay \

@@ -12,13 +12,19 @@
 # libaom     - git master HEAD
 
 
-# Use Debian for our base image
-FROM docker.io/debian:stable-slim AS build
+#-------------------------------
+# Use Debian for our build image
+#-------------------------------
+FROM debian:stable-slim AS build
 
+#----------------------------------
 # Set the working directory to /app
+#----------------------------------
 WORKDIR /app
 
+#---------------------------------------------------------------
 # Copy the current directory contents into the container at /app
+#---------------------------------------------------------------
 COPY . /app
 
 #--------------------------------
@@ -64,7 +70,7 @@ apt-get install -y \
 #--------------
 # Install meson
 #--------------
-pip3 install --no-cache-dir meson==0.57.1 && \
+pip3 install --no-cache-dir meson && \
 #------------------
 # Setup directories
 #------------------
@@ -72,35 +78,32 @@ mkdir -p /input /output /ffmpeg/ffmpeg_sources && \
 #-------------
 # Build ffmpeg
 #-------------
-./build-ffmpeg.sh && \
-#----------------------------------------------------
-# Clean up directories and packages after compilation
-#----------------------------------------------------
-pip3 uninstall meson -y && \
-apt-get purge -y \
-  autoconf \
-  automake \
-  build-essential \
-  ca-certificates \
-  cmake \
-  doxygen \
-  ninja-build \
-  pkg-config \
-  python3-pip \
-  python3-setuptools \
-  python3-wheel \
-  texinfo \
-  git-core \
-  nasm \
-  yasm && \
-apt-get autoremove -y && \
-apt-get install -y \
-  --no-install-recommends \
-  libsdl2-dev && \
-apt-get clean && \
-apt-get autoclean && \
-rm -rf /var/lib/apt/lists/* && \
-rm -rf /ffmpeg
+./build-ffmpeg.sh
+
+#-----------------------------------------
+# Use Debian for our multistage base image
+#-----------------------------------------
+FROM debian:stable-slim
+
+#----------------------------------
+# Set the working directory to /app
+#----------------------------------
+WORKDIR /app
+
+#----------------------------------------
+# Copy files/directories from build image
+#----------------------------------------
+COPY --from=build /usr/local/bin /usr/local/bin
+
+#-------------------------
+# Remove unneeded binaries
+#-------------------------
+RUN \
+rm -f \
+/usr/local/bin/SvtAv1DecApp \
+/usr/local/bin/aomdec \
+/usr/local/bin/meson
+
 #---------------------------------------
 # Run ffmpeg when the container launches
 #---------------------------------------
