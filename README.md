@@ -1,10 +1,10 @@
 # ffmpeg-git
 
-*This branch is an unfinished multistage build that significantly reduces the size of the docker image.*
-*Known issues:*
+This branch is an unfinished multistage build that significantly reduces the size of the docker image.  
+Known issues:
 
-    *- FFmpeg binary still has library dependencies*
-    *- The arm64 build fails with a "too many GOT entries for -fpic, please recompile with -fPIC" error*
+    - FFmpeg binary still has library dependencies
+    - The arm64 build fails with a "too many GOT entries for -fpic, please recompile with -fPIC" error
 
 
 Available on [Docker Hub][1].
